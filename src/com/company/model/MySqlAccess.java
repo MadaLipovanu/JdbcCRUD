@@ -8,12 +8,14 @@ public class MySqlAccess {
     private PreparedStatement preparedStatement = null;
     private ResultSet resultSet = null;
 
-
-    //START OF CRUD OPERATIONS
-    //CREATE
-    public void create() throws SQLException {
+    public void setConnection() throws SQLException {
         this.connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/feedback?user=root&password=123456");
         statement = connect.createStatement();
+    }
+
+    //START OF CRUD OPERATIONS
+    public void create() throws SQLException {
+        setConnection();
         preparedStatement = connect.prepareStatement("INSERT INTO comments (MYUSER, WEBPAGE, DATUM, SUMMARY, COMMENTS) VALUES ('Ana', 'TESTWEB', 'TESTWEB', 'TESTSUMMARY', 'TESTCOMMENT')");
         int rowsInserted = statement.executeUpdate("INSERT INTO comments (MYUSER, WEBPAGE, DATUM, SUMMARY, COMMENTS) VALUES ('Ana', 'TESTWEB','TESTWEB', 'TESTSUMMARY', 'TESTCOMMENT')");
         System.out.println(rowsInserted + " rows updated");
@@ -23,10 +25,8 @@ public class MySqlAccess {
         System.out.println();
     }
 
-    //READ
     public void read() throws SQLException {
-        this.connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/feedback?user=root&password=123456");
-        statement = connect.createStatement();
+        setConnection();
         Statement statement = connect.createStatement();
         ResultSet resultSet = statement.executeQuery("select * from comments");
         System.out.println("Read table: ");
@@ -42,10 +42,8 @@ public class MySqlAccess {
         System.out.println();
     }
 
-    //UPDATE
     public void update() throws SQLException {
-        this.connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/feedback?user=root&password=123456");
-        statement = connect.createStatement();
+        setConnection();
         String sql = "UPDATE comments SET MYUSER = 'deni' WHERE id=1";
         PreparedStatement prStatement = connect.prepareStatement(sql);
         int rowsUpdated = statement.executeUpdate("UPDATE comments SET MYUSER = 'deni' WHERE id=1");
@@ -56,10 +54,8 @@ public class MySqlAccess {
         System.out.println();
     }
 
-    // DELETE
     public void delete() throws SQLException {
-        this.connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/feedback?user=root&password=123456");
-        statement = connect.createStatement();
+        setConnection();
         preparedStatement = connect.prepareStatement("DELETE FROM comments WHERE MYUSER='TESTUSER'");
         preparedStatement.executeUpdate();
         int rowsDeleted = statement.executeUpdate("DELETE FROM comments WHERE MYUSER='TESTUSER'");
@@ -73,9 +69,7 @@ public class MySqlAccess {
     public void readDataBase() throws Exception {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");  // This will load the MySQL driver, each DB has its own driver
-            this.connect = DriverManager.getConnection("jdbc:mysql://localhost:3306/feedback?user=root&password=123456");
-            statement = connect.createStatement();
-
+            setConnection();
         } catch (Exception e) {
             throw e;
         } finally {
@@ -100,5 +94,5 @@ public class MySqlAccess {
 
         }
     }
-
 }
+
